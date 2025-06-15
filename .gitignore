@@ -1,9 +1,16 @@
-*.pyc
+# Environnement virtuel
+venv/
 __pycache__/
-db.sqlite3
-.env
-/static/
-media/
-.vscode/
+*.pyc
+
+# Fichiers temporaires
 *.log
-*/migrations/
+*.sqlite3
+
+# Fichiers de config Django
+.env
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
