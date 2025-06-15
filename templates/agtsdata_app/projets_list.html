@@ -1,0 +1,76 @@
+{% extends 'agtsdata_app/base.html' %}
+{% load static %}  <!-- ✅ nécessaire pour utiliser la balise static -->
+
+{% block title %}Nos Projets{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Ligne avec bouton Accueil à gauche et titre centré -->
+    <div class="mb-4">
+        <a href="{% url 'accueil' %}" class="btn btn-outline-primary rounded-pill shadow-sm">
+            ← Retour aux projets
+        </a>
+    </div>
+
+    {% if page_obj %}
+    <div class="row g-4">
+        {% for projet in page_obj %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm animate__animated animate__fadeInUp">
+                {% if projet.image %}
+                <img src="{{ projet.image.url }}" class="card-img-top" alt="{{ projet.nom }}">
+                {% else %}
+                <img src="{% static 'images/val.jpg' %}" class="card-img-top" alt="Projet sans image">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ projet.nom }}</h5>
+                    <p class="card-text text-muted small">
+                        {{ projet.description|truncatechars:100 }}
+                    </p>
+                    <a href="{% url 'projet_detail' projet.pk %}" class="mt-auto btn btn-primary">Voir plus</a>
+                </div>
+                <div class="card-footer text-muted small">
+                    📅 Lancé le {{ projet.date_lancement|date:"d F Y" }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo; Précédent</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo; Précédent</span>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivant &raquo;</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">Suivant &raquo;</span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% else %}
+    <p class="text-center text-muted">Aucun projet disponible pour le moment.</p>
+    {% endif %}
+</div>
+{% endblock %}

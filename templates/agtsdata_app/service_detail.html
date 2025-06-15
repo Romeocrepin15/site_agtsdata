@@ -1,0 +1,239 @@
+{% load static %}
+{% load tz %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ service.nom }} - Détail du service | AGTS-DATA</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --agts-blue: #007bff;
+            --agts-yellow: #fdbb2d;
+            --agts-gradient: linear-gradient(45deg, #22c1c3, #22c1f9);
+            --agts-dark-blue: #0056b3;
+            --agts-font: 'Segoe UI', 'Roboto', sans-serif;
+            --section-white: #ffffff;
+            --section-lightgrey: #f4f6f8;
+        }
+
+        body {
+            font-family: var(--agts-font);
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #333;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        a:hover {
+            color: var(--agts-blue);
+        }
+
+        .site-header {
+            background: var(--agts-gradient);
+            color: white;
+            padding: 20px;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo-and-title {
+            display: flex;
+            align-items: center;
+        }
+
+        .site-logo {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .site-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .main-nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .main-nav a {
+            color: white;
+            font-weight: 500;
+        }
+
+        .main-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .section {
+            padding: 60px 20px;
+            background-color: var(--section-white);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 12px 28px;
+            background: var(--agts-gradient);
+            color: white;
+            font-weight: bold;
+            border-radius: 25px;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: var(--agts-blue);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+        }
+
+        footer {
+            background: var(--agts-gradient);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .main-nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .site-logo {
+                height: 40px;
+            }
+
+            .site-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+        <div class="logo-and-title">
+            <img src="{% static 'images/logo1.png' %}" alt="Logo AGTS-DATA" class="site-logo">
+            <span class="site-title">AGTS-DATA</span>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                <li><a href="{% url 'services' %}">Services</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<section class="section">
+    <div class="container">
+        <h2 class="text-center">{{ service.nom }}</h2>
+
+        <p style="font-size: 1.1rem;">{{ service.description }}</p>
+
+        {% if service.image %}
+            <img src="{{ service.image.url }}" alt="{{ service.nom }}" style="display:block; margin:30px auto; max-height:400px; border-radius:12px;">
+        {% endif %}
+
+        {% if service.details or service.prix_min or service.prix_max %}
+        <div>
+            <h4>Détails supplémentaires :</h4>
+
+            {% if service.details %}
+                <p>{{ service.details|linebreaks }}</p>
+            {% endif %}
+
+            {% if service.prix_min and service.prix_max %}
+                <p><strong>Intervalle de prix :</strong> {{ service.prix_min|floatformat:0|intcomma }} – {{ service.prix_max|floatformat:0|intcomma }} FCFA</p>
+            {% elif service.prix_min %}
+                <p><strong>Prix à partir de :</strong> {{ service.prix_min|floatformat:0|intcomma }} FCFA</p>
+            {% elif service.prix_max %}
+                <p><strong>Prix jusqu’à :</strong> {{ service.prix_max|floatformat:0|intcomma }} FCFA</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section" id="contact-form">
+    <div class="container" style="max-width: 700px;">
+        <h3 class="text-center">Nous contacter à propos de ce service</h3>
+        <form action="#" method="post">
+            {% csrf_token %}
+            <label for="nom" class="form-label">Nom complet</label>
+            <input type="text" id="nom" name="nom" class="form-control" required>
+
+            <label for="email" class="form-label">Adresse e-mail</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+
+            <label for="message" class="form-label">Votre message</label>
+            <textarea id="message" name="message" rows="5" class="form-control" required></textarea>
+
+            <div class="text-center">
+                <button type="submit" class="back-button">Envoyer ma demande</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<div class="text-center" style="margin: 40px 0;">
+    <a href="{% url 'services' %}" class="back-button">← Retour à tous les services</a>
+</div>
+
+<footer>
+    &copy; {% now "Y" %} AGTS-DATA. Tous droits réservés.
+</footer>
+
+</body>
+</html>

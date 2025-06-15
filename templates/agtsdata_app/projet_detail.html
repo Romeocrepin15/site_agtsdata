@@ -1,0 +1,60 @@
+{% extends 'agtsdata_app/base.html' %}
+
+{% block title %}{{ projet.nom }} - Détail du projet{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'projets' %}" class="btn btn-outline-primary rounded-pill shadow-sm">
+            ← Retour aux projets
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                {% if projet.image %}
+                <div class="text-center my-3">
+                    <img src="{{ projet.image.url }}"
+                         alt="{{ projet.nom }}"
+                         class="img-fluid rounded-4 shadow-sm"
+                         style="max-width: 600px; max-height: 350px; object-fit: cover;">
+                </div>
+                {% endif %}
+
+                <div class="card-body px-4 pb-3 pt-0">
+                    <h1 class="card-title fw-bold text-primary mb-3" style="font-size: 2rem;">{{ projet.nom }}</h1>
+                    <p class="card-text text-dark" style="font-size: 1.1rem; line-height: 1.6;">
+                        {{ projet.description }}
+                    </p>
+                </div>
+
+                <div class="card-footer bg-light px-4 py-3 d-flex justify-content-between align-items-center">
+                    <div class="text-muted">
+                        📅 Lancement prévu le <strong>{{ projet.date_lancement|date:"d F Y" }}</strong>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'toggle_like' projet.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
+                            {% if user in projet.likes.all %}
+                                ❤️ Retirer le like
+                            {% else %}
+                                🤍 Aimer
+                            {% endif %}
+                            ({{ projet.total_likes }})
+                        </button>
+                    </form>
+                    {% else %}
+                    <span class="text-muted small">
+                        Connectez-vous pour aimer ❤️
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

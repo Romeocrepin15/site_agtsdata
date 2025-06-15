@@ -1,0 +1,277 @@
+{% extends 'agtsdata_app/base.html' %}
+{% load static %}
+
+{% block title %}Accueil - AGTS DATA{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --agts-blue: #007bff;
+        --agts-yellow: #fdbb2d;
+        --agts-gradient: linear-gradient(45deg, #22c1c3, #22c1f9);
+        --agts-dark-blue: #0056b3;
+        --agts-font: 'Segoe UI', 'Roboto', sans-serif;
+    }
+
+    body {
+        font-family: var(--agts-font);
+        background-color: #fff;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 30px;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--agts-blue);
+    }
+
+    .brand img {
+        height: 60px;
+        margin-right: 10px;
+    }
+
+    .brand span {
+        font-size: 1.6rem;
+        font-weight: bold;
+    }
+
+    .navbar-right a {
+        margin-left: 25px;
+        text-decoration: none;
+        color: #000;
+        font-size: 1rem;
+        transition: color 0.3s;
+    }
+
+    .navbar-right a:hover {
+        color: var(--agts-blue);
+    }
+
+    header.hero {
+        background: var(--agts-gradient);
+        color: white;
+        padding: 80px 0;
+        text-align: center;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+    }
+
+    .hero p {
+        font-size: 1.25rem;
+    }
+
+    section {
+        padding: 60px 0;
+    }
+
+    footer {
+        background-color: var(--agts-dark-blue);
+        background: linear-gradient(45deg, #22c1c3, #22c1f9);
+        color: white;
+        padding: 30px 0;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background: var(--agts-gradient);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: var(--agts-blue);
+    }
+
+
+    .swiper {
+      width: 100%;
+      padding: 20px 0;
+    }
+
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+    }
+
+    .card {
+      width: 300px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 15px;
+    }
+
+    .card-content h3 {
+      margin: 0 0 10px;
+      font-size: 1.2em;
+      color: #333;
+    }
+
+    .card-content p {
+      font-size: 0.95em;
+      color: #555;
+    }
+</style>
+
+<!-- HEADER NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <div class="navbar-left">
+            <a href="{% url 'accueil' %}" class="brand">
+                <img src="{% static 'images/logo1.PNG' %}" alt="Logo AGTS">
+                <span>AGTS-DATA</span>
+            </a>
+        </div>
+        <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            ☰
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="{% url 'accueil' %}">Accueil</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'equipe' %}">A propos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'projets' %}">Projets</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- SECTION HERO -->
+<header class="hero">
+    <div class="container">
+        <meta
+  name="description"
+  content="AGTS-DATA vous accompagne dans la Collecte, le Traitement et L'Analyse de vos données pour booster vos performances.">
+        <h1>Bienvenue! Chez AGTS DATA</h1>
+        <p>Nous transformons la complexité des données en clarté.</p>
+      <p><i>AGTS-DATA vous accompagne dans la Collecte, le Traitement et L'Analyse de vos données pour booster vos performances.</i></p>
+
+
+        <a href="{% url 'services' %}" class="btn btn-lg btn-primary mt-3 rounded-pill">Decouvrir nos services.</a>
+    </div>
+</header>
+
+<!-- SECTION PROJETS -->
+<section>
+    <div class="container py-5">
+        <h2 class="text-center text-primary mb-5">🌟 Nos Réalisations</h2>
+
+        {% if projets %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for projet in projets %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    {% if projet.image %}
+                        <img src="{{ projet.image.url }}" class="card-img-top" alt="{{ projet.nom }}">
+                    {% else %}
+                        <img src="{% static 'images/default_project.jpg' %}" class="card-img-top" alt="Projet sans image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'projet_detail' projet.pk %}" class="text-decoration-none text-dark">
+                                {{ projet.nom }}
+                            </a>
+                        </h5>
+                        <p class="card-text">{{ projet.description|truncatewords:25 }}</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        📅 Lancé le {{ projet.date_lancement|date:"d F Y" }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p class="text-center">Aucun projet disponible pour le moment.</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- SECTION EQUIPE -->
+<section class="bg-light">
+    <div class="container">
+        <h2 class="text-center text-primary mb-5">Notre Équipe</h2>
+        {% if membres %}
+        <div class="row">
+            {% for membre in membres %}
+            <div class="col-md-3 text-center mb-4">
+                <img src="{{ membre.photo.url }}" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+                <h5>{{ membre.nom }}</h5>
+                <p class="text-muted">{{ membre.fonction }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p class="text-center text-muted">Aucun membre d'équipe enregistré.</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <p class="mb-1">© 2025 AGTS-DATA. Tous droits réservés.</p>
+        <p class="mb-0 small">Développé par AGTS-DATA | Transformez la donnée en clarté.</p>
+    </div>
+</footer>
+ <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <!-- Initialisation -->
+  <script>
+    var swiper = new Swiper(".mySwiper", {
+      slidesPerView: 3,
+      spaceBetween: 30,
+      loop: true,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev"
+      },
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false
+      },
+      breakpoints: {
+        1024: {
+          slidesPerView: 3
+        },
+        768: {
+          slidesPerView: 2
+        },
+        480: {
+          slidesPerView: 1
+        }
+      }
+    });
+  </script>
+{% endblock %}

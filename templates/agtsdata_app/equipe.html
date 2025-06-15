@@ -1,0 +1,452 @@
+{% extends 'agtsdata_app/base.html' %}
+{% load static %}
+
+{% block title %}Notre Équipe - AGTS DATA{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --agts-blue: #007bff;
+        --agts-yellow: #fdbb2d;
+        --agts-gradient: linear-gradient(45deg, #22c1c3, #22c1f9);
+        --agts-dark-blue: #0056b3;
+        --agts-font: 'Segoe UI', 'Roboto', sans-serif;
+        --section-white: #ffffff;
+        --section-lightgrey: #f4f6f8;
+    }
+
+    body {
+        font-family: var(--agts-font);
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        color: #333;
+    }
+
+    header {
+        background: var(--agts-gradient);
+        color: white;
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    header p {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+
+    footer {
+        background-color: #f8f9fa;
+        text-align: center;
+        padding: 20px 10px;
+        margin-top: 60px;
+        font-size: 0.95rem;
+        color: #666;
+    }
+
+    .section {
+        padding: 60px 20px;
+        max-width: 1100px;
+        margin: auto;
+    }
+
+    .section:nth-child(even) {
+        background-color: var(--section-lightgrey);
+    }
+
+    .section:nth-child(odd) {
+        background-color: var(--section-white);
+    }
+
+    .section h2 {
+        text-align: center;
+        color: var(--agts-blue);
+        font-size: 2.3rem;
+        margin-bottom: 20px;
+    }
+
+    .section p {
+        font-size: 1rem;
+        line-height: 1.8;
+        color: #444;
+        text-align: justify;
+    }
+
+    .section img.illustration {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 20px auto;
+        border-radius: 8px;
+    }
+
+    .subsection-title {
+        color: var(--agts-dark-blue);
+        font-size: 1.4rem;
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .team-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    .team-member {
+        width: 280px;
+        text-align: center;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        padding: 20px;
+        transition: transform 0.3s;
+    }
+
+    .team-member:hover {
+        transform: translateY(-5px);
+    }
+
+    .team-member img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 15px;
+        border: 3px solid var(--agts-blue);
+    }
+
+    .team-member h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--agts-dark-blue);
+        margin-bottom: 5px;
+    }
+
+    .separator {
+        height: 1px;
+        background-color: #ccc;
+        margin: 10px auto;
+        width: 60%;
+    }
+
+    .team-member p {
+        text-align: justify;
+        margin-top: 10px;
+        color: #444;
+    }
+
+    .team-member strong {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+        color: #555;
+    }
+
+    .back-button {
+        display: inline-block;
+        margin: 50px auto 0;
+        padding: 12px 28px;
+        background: var(--agts-gradient);
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 25px;
+        transition: background 0.3s ease;
+    }
+
+    .back-button:hover {
+        background: var(--agts-blue);
+    }
+
+
+    .site-header {
+    background: var(--agts-gradient);
+    color: white;
+    padding: 20px 20px 40px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo-and-title {
+    display: flex;
+    align-items: center;
+}
+
+.site-logo {
+    height: 50px;
+    width: auto;
+    margin-right: 10px;
+}
+
+.site-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.main-nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.main-nav a:hover {
+    text-decoration: underline;
+}
+
+.header-intro {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.header-intro h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.header-intro p {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+/* Réduction harmonieuse de la taille des images illustratives */
+.section img.illustration {
+    display: block;
+    max-width: 400px; /* Limite la largeur pour éviter les images trop larges */
+    width: 70%;
+    height: auto;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* améliore le rendu visuel */
+}
+
+/* Harmonisation du footer avec le header/page d’accueil */
+footer {
+    background: var(--agts-gradient);
+    text-align: center;
+    padding: 20px 10px;
+    margin-top: 60px;
+    font-size: 0.95rem;
+    color: white;
+}
+
+.section-qui-sommes-nous .contenu-horizontal {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* espace entre l'image et le texte */
+}
+
+.section-qui-sommes-nous .illustration {
+    width: 5%; /* ajuste la taille de l’image selon tes besoins */
+    height: auto;
+}
+
+.section-qui-sommes-nous p {
+    flex: 1; /* prend l’espace restant */
+    text-align: justify;
+}
+
+/* RESPONSIVE DESIGN */
+@media screen and (max-width: 992px) {
+    header h1,
+    .header-intro h1 {
+        font-size: 2rem;
+    }
+
+    .header-intro p {
+        font-size: 1rem;
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .team-member {
+        width: 90%;
+        max-width: 350px;
+    }
+
+    .section-qui-sommes-nous .contenu-horizontal {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .section-qui-sommes-nous .illustration {
+        width: 60%;
+    }
+
+    .section h2 {
+        font-size: 2rem;
+    }
+
+    .section img.illustration {
+        width: 90%;
+        max-width: 300px;
+    }
+
+    .site-title {
+        font-size: 1.2rem;
+    }
+
+    .site-logo {
+        height: 40px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    header {
+        padding: 30px 10px;
+    }
+
+    .header-intro h1 {
+        font-size: 1.8rem;
+    }
+
+    .team-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .back-button {
+        width: 80%;
+        text-align: center;
+    }
+
+    .subsection-title {
+        font-size: 1.2rem;
+    }
+
+    footer {
+        font-size: 0.85rem;
+    }
+}
+
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- HEADER AVEC NAVIGATION -->
+<header class="site-header">
+    <div class="header-container">
+        <div class="logo-and-title">
+            <img src="{% static 'images/logo1.png' %}" alt="Logo AGTS-DATA" class="site-logo">
+            <span class="site-title">AGTS-DATA</span>
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                <li><a href="#equipe">A propos</a></li>
+                <li><a href="{% url 'services' %}">Services</a></li>
+                <li><a href="{% url 'projets' %}">Projets</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="header-intro">
+        <h1>A propos de AGTS-DATA</h1>
+        <p>Découvrez les motivations et les esprits derrière AGTS-DATA</p>
+    </div>
+</header>
+
+
+<!-- SECTION PRÉSENTATION -->
+<section class="section section-qui-sommes-nous">
+    <h2>Qui sommes-nous ?</h2>
+    <div class="contenu-horizontal">
+        <img src="{% static 'images/logo1.png' %}" alt="Présentation AGTS-DATA" class="illustration">
+        <p>
+            AGTS-DATA (Analytics & Gestion des Technologies Scolaires - DATA) est une initiative née de la volonté de transformer la gestion et l’analyse des données scolaires.
+            Fondée par un groupe de passionnés de technologie et d’éducation, notre ambition est de devenir un acteur de référence dans le domaine de la <strong>data science éducative</strong>.
+        </p>
+    </div>
+</section>
+
+
+<section class="section">
+    <h3 class="subsection-title">Historique</h3>
+    <img src="{% static 'images/hist.png' %}" alt="Historique AGTS" class="illustration">
+    <p>
+        L’idée de AGTS-DATA a germé en 2024 dans un cadre académique universitaire axé sur les systèmes intelligents pour l’éducation.
+        Elle est officiellement lancée en 2025 avec des objectifs concrets : concevoir des tableaux de bord, alerter sur les performances scolaires, suivre les progrès des élèves...
+    </p>
+</section>
+
+<section class="section">
+    <h3 class="subsection-title">Notre Mission</h3>
+    <img src="{% static 'images/mis.png' %}" alt="Mission AGTS" class="illustration">
+    <p>
+        AGTS-DATA a pour mission de :
+    </p>
+    <ul>
+        <li>Offrir un suivi intelligent des performances scolaires</li>
+        <li>Faciliter la prise de décision avec des tableaux de bord clairs</li>
+        <li>Soutenir les enseignants, parents et élèves avec des outils modernes</li>
+    </ul>
+</section>
+
+<section class="section">
+    <h3 class="subsection-title">Nos Valeurs</h3>
+    <img src="{% static 'images/val1.jpg' %}" alt="Valeurs AGTS" class="illustration">
+    <p>
+        Innovation, rigueur scientifique, impact social et accessibilité sont au cœur de notre engagement.
+    </p>
+</section>
+
+<!-- SECTION ÉQUIPE -->
+<section class="section" id="equipe">
+    <h2>Les Membres de l’Équipe</h2>
+    
+    {% if membres %}
+    <div class="team-container">
+        {% for membre in membres %}
+        <div class="team-member">
+            {% if membre.photo %}
+            <img src="{{ membre.photo.url }}" alt="{{ membre.nom }}">
+            {% endif %}
+            <h4>{{ membre.nom }}</h4>
+            <div class="separator"></div>
+            <strong>{{ membre.poste }}</strong>
+            <p>{{ membre.biographie }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-muted">Aucun membre d'équipe enregistré pour le moment.</p>
+    {% endif %}
+</section>
+
+<!-- BOUTON RETOUR -->
+<div class="text-center">
+    <a href="{% url 'accueil' %}" class="back-button">← Retour à l'accueil</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    &copy; {{ year }} AGTS-DATA. Tous droits réservés.
+</footer>
+{% endblock %}
